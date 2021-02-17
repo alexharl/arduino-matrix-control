@@ -1,11 +1,11 @@
 {
-  "name": "Arduino Matrix Renderer",
+  "name": "Arduino Matrix Control",
   "version": "0.0.1",
   "keywords": "led, matrix, driver",
   "description": "A simple library that controls MAX72xx LED matrices",
   "repository": {
     "type": "git",
-    "url": "https://github.com/MajicDesigns/MD_MAX72XX.git"
+    "url": "https://github.com/alexharl/arduino-matrix-control.git"
   },
   "authors": [
     {
