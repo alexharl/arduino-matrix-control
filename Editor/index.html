@@ -1,0 +1,46 @@
+<html>
+  <head>
+    <title>Matrix Editor</title>
+    <link rel="stylesheet" href="/assets/matrix/matrix.css">
+  </head>
+  <body>
+    <script src="/assets/matrix/matrix.js"></script>
+
+    <div class="main">
+      <div class="actions">
+        <button class="action" onclick="matrix.clear()">clear</button>
+        <button class="action" onclick="matrix.save()">save</button>
+      </div>
+      <div class="matrix" id="matrix"></div>
+    </div>
+
+    <script>
+      const matrix = LedMatrix('matrix', 32, 8);
+    </script>
+
+    <style>
+      body {
+        background-color: #484848;
+      }
+      .main {
+        padding-top: 80px;
+      }
+      
+      .actions {
+        margin: auto;
+        width: 75%;
+        display: flex;
+        padding: 10px;
+        justify-content: space-between;
+      }
+      .actions .action {
+        padding: 5px 10px;
+        background-color: #d21515;
+        border-radius: 3px;
+        border: none;
+        color: white;
+        font-size: 20px;
+      }
+    </style>
+  </body>
+</html>

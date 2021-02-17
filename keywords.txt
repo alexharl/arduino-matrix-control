@@ -1,0 +1,41 @@
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+Layer	        KEYWORD1
+Renderer	    KEYWORD1
+renderOp_t	    KEYWORD1
+opVals_t	    KEYWORD1
+bufferOpType_t	KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+clear	KEYWORD2
+apply	KEYWORD2
+move	KEYWORD2
+render	KEYWORD2
+
+######################################
+# Constants (LITERAL1)
+#######################################
+
+# bufferOpType_t
+Layer::CLEAR        LITERAL1
+Layer::WRITE        LITERAL1
+Layer::OVERWRITE    LITERAL1
+
+# renderOp_t
+Renderer::DECODEMODE    LITERAL1
+Renderer::INTENSITY     LITERAL1
+Renderer::SCANLIMIT     LITERAL1
+Renderer::SHUTDOWN      LITERAL1
+Renderer::DISPLAYTEST   LITERAL1
+
+
+# opVals_t
+Renderer::OFF           LITERAL1
+Renderer::ON            LITERAL1
+Renderer::MAX_INTENSITY LITERAL1
+Renderer::MAX_SCANLIMIT LITERAL1
