@@ -1,14 +1,19 @@
 #include "Layer.h"
 
-void Layer::bufferOp(bufferOpType_t bOp, uint32_t *data = 0)
+int WARPAROUND = 1;
+
+void Layer::bufferOp(bufferOpType_t op, uint32_t *data = 0)
 {
-    for (int row = 0; row < 8; row++)
-    {
-        if (bOp & CLEAR)
-            buffer[row] = 0;
-        if (bOp & WRITE)
-            buffer[row] |= data[row];
-    }
+    for (int row = 0; row < HEIGHT; row++)
+        bufferRowOp(op, row, data[row]);
+}
+
+void Layer::bufferRowOp(bufferOpType_t bOp, uint8_t row, uint32_t data = 0)
+{
+    if (bOp & CLEAR)
+        buffer[row] = 0;
+    if (bOp & WRITE)
+        buffer[row] |= data;
 }
 
 void Layer::clear()
@@ -19,6 +24,12 @@ void Layer::clear()
 void Layer::apply(uint32_t *data)
 {
     bufferOp(WRITE, data);
+}
+
+void Layer::sprite(uint8_t *data, int offset_top, int offset_right)
+{
+    for (int i = offset_top; i < HEIGHT; i++)
+        bufferRowOp(WRITE, i, data[i] << offset_right);
 }
 
 void Layer::move(int amount)
@@ -35,7 +46,7 @@ void Layer::move(int amount)
     int offset = 32 - shift;
 
     // shift each row
-    for (int row = 0; row < 8; row++)
+    for (int row = 0; row < HEIGHT; row++)
     {
         // all bits that would be lost after shift get stored here
         uint32_t overflow = 0;
@@ -52,6 +63,7 @@ void Layer::move(int amount)
         }
 
         // apply overflown bits
-        buffer[row] |= overflow;
+        if (WARPAROUND)
+            bufferRowOp(WRITE, row, overflow);
     }
 }

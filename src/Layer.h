@@ -7,6 +7,7 @@
 #include "WProgram.h"
 #endif
 
+#define HEIGHT 8
 class Layer
 {
 
@@ -24,19 +25,19 @@ public:
   /**
    * buffer
    */
-  uint32_t buffer[8];
+  uint32_t buffer[HEIGHT];
 
   /**
    * clears the buffer
-   * Shorthand for: bufferOf(CLEAR)
+   * Shorthand for: bufferOp(CLEAR)
    */
   void clear();
 
   /**
    * sets data in buffer
-   * Shorthand for: bufferOf(CLEAR)
+   * Shorthand for: bufferOp(write data)
    */
-  void apply(uint32_t data[8]);
+  void apply(uint32_t data[HEIGHT]);
 
   /**
    * shifts buffer 'amount' bits horizontaly
@@ -45,11 +46,15 @@ public:
    */
   void move(int amount);
 
+  void sprite(uint8_t *data, int offset_top, int offset_right);
+
 private:
   /**
    * do something with buffer
    */
   void bufferOp(bufferOpType_t bOp, uint32_t *data);
+
+  void bufferRowOp(bufferOpType_t bOp, uint8_t row, uint32_t data);
 };
 
 #endif
