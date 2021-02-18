@@ -8,21 +8,23 @@
 #endif
 
 #include <Layer.h>
-
 class Renderer : public Layer
 {
 private:
   uint32_t dup(uint8_t value);
-  void sendOp(uint8_t op, uint32_t values);
-  void sendOpAll(uint8_t op, uint8_t value);
-  void send(uint32_t ops, uint32_t values);
+  void sendOp(uint8_t op, uint8_t value);
+  void send(uint32_t ops, uint32_t values, uint8_t reverse = OFF,  uint8_t invert = OFF);
   uint8_t DATA_PIN;
   uint8_t CLK_PIN;
   uint8_t CS_PIN;
-
+  uint8_t DEVICES;
 public:
-  Renderer(int dataPin, int clkPin, int csPin);
+  Renderer(int dataPin, int clkPin, int csPin, int devices);
   void render();
+  void renderRow(uint8_t row);
+  uint8_t FLIP_V;
+  uint8_t FLIP_H;
+  uint8_t INVERT;
   enum renderOp_t
   {
     DECODEMODE = 9,
