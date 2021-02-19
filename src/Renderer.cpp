@@ -41,9 +41,25 @@ void Renderer::render()
 
 void Renderer::renderRow(uint8_t row)
 {
-    // reverse output order vertically
+    // reverse output vertically
     int index = FLIP_V ? HEIGHT - row : row - 1;
-    send(dup(row), buffer[index], FLIP_H, INVERT);
+
+    // reverse order horizontally
+    uint32_t values = FLIP_H ? reverse(buffer[index]) : buffer[index];
+
+    send(dup(row), INVERT ? ~values : values);
+}
+
+void reverse(uint32_t value)
+{
+    uint32_t mask = 1;
+    uint32_t reversed = 0;
+
+    do
+        reversed |= (mask & value);
+    while (mask << 1);
+
+    return reversed;
 }
 
 uint32_t Renderer::dup(uint8_t value)
@@ -61,23 +77,18 @@ void Renderer::sendOp(uint8_t op, uint8_t value)
     send(dup(op), dup(value));
 }
 
-void Renderer::send(uint32_t ops, uint32_t values, uint8_t reverse, uint8_t invert)
+void Renderer::send(uint32_t ops, uint32_t values)
 {
     digitalWrite(CS_PIN, LOW);
 
+    // iterate devices from highest
     for (int i = DEVICES - 1; i >= 0; i--)
     {
-        // shift out ops
+        // shift out op byte at device index
         shiftOut(DATA_PIN, CLK_PIN, MSBFIRST, ((uint8_t *)&ops)[i]);
 
-        // shift out values
-        // reverse output order horizontally
-        // ON - shift out data lsb first & take opposite byte in int
-        int index = reverse ? DEVICES - 1 - i : i;
-        uint8_t bitOrder = reverse ? LSBFIRST : MSBFIRST;
-        uint8_t value = ((uint8_t *)&values)[index];
-
-        shiftOut(DATA_PIN, CLK_PIN, bitOrder, invert ? ~value : value);
+        // shift out value byte
+        shiftOut(DATA_PIN, CLK_PIN, MSBFIRST, ((uint8_t *)&values)[i]);
     }
 
     digitalWrite(CS_PIN, HIGH);
