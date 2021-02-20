@@ -1,35 +1,30 @@
 #include "Layer.h"
 
-int WARPAROUND = 1;
-
-void Layer::bufferOp(bufferOpType_t op, uint32_t *data = 0)
+void Layer::modify_buffer(modType_t mod, uint32_t *data = 0)
 {
     for (int row = 0; row < HEIGHT; row++)
-        bufferRowOp(op, row, data[row]);
+        modify_buffer_row(mod, row, data[row]);
 }
 
-void Layer::bufferRowOp(bufferOpType_t bOp, uint8_t row, uint32_t data = 0)
+void Layer::modify_buffer_row(modType_t mod, uint8_t row, uint32_t data = 0)
 {
-    if (bOp & CLEAR)
-        buffer[row] = 0;
-    if (bOp & WRITE)
-        buffer[row] |= data;
+    modify_bits(mod, &buffer[row], data);
 }
 
 void Layer::clear()
 {
-    bufferOp(CLEAR);
+    modify_buffer(CLEAR);
 }
 
 void Layer::apply(uint32_t *data)
 {
-    bufferOp(WRITE, data);
+    modify_buffer(WRITE, data);
 }
 
 void Layer::sprite(uint8_t *data, int offset_top, int offset_right)
 {
     for (int i = offset_top; i < HEIGHT; i++)
-        bufferRowOp(WRITE, i, data[i] << offset_right);
+        modify_buffer_row(WRITE, i, data[i] << offset_right);
 }
 
 void Layer::move(int amount)
@@ -38,12 +33,20 @@ void Layer::move(int amount)
     if (amount == 0)
         return;
 
+    int max = 32;
+
     // shift right if amount is positive
     bool right = amount > 0;
+
+    int shift = amount;
     // normalize amount
-    int shift = right ? amount : amount * -1;
+    if (shift > max || shift < (max * -1))
+        shift %= max;
+    else if (!right)
+        shift *= -1;
+
     // calculate offset
-    int offset = 32 - shift;
+    int offset = max - shift;
 
     // shift each row
     for (int row = 0; row < HEIGHT; row++)
@@ -64,6 +67,6 @@ void Layer::move(int amount)
 
         // apply overflown bits
         if (WARPAROUND)
-            bufferRowOp(WRITE, row, overflow);
+            modify_buffer_row(WRITE, row, overflow);
     }
 }

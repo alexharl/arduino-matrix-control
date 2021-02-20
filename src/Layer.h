@@ -7,20 +7,18 @@
 #include "WProgram.h"
 #endif
 
+#include "Helper.h"
+
 #define HEIGHT 8
+
 class Layer
 {
 
 public:
   /**
-   * Ops that can be performed on the buffer via bufferOp
+   * move overflown bits to the other side on move
    */
-  enum bufferOpType_t
-  {
-    CLEAR = 1,
-    WRITE = 2,
-    OVERWRITE = 3
-  };
+  uint8_t WARPAROUND = 1;
 
   /**
    * buffer
@@ -37,7 +35,7 @@ public:
    * sets data in buffer
    * Shorthand for: bufferOp(write data)
    */
-  void apply(uint32_t data[HEIGHT]);
+  void apply(uint32_t *data);
 
   /**
    * shifts buffer 'amount' bits horizontaly
@@ -46,15 +44,21 @@ public:
    */
   void move(int amount);
 
-  void sprite(uint8_t *data, int offset_top, int offset_right);
+  /**
+   * loads a sprite with offsets into buffer
+   */
+  void sprite(uint8_t *data, int offset_top = 0, int offset_right = 0);
 
 private:
   /**
-   * do something with buffer
+   * do something with complete buffer
    */
-  void bufferOp(bufferOpType_t bOp, uint32_t *data);
+  void modify_buffer(modType_t mod, uint32_t *data);
 
-  void bufferRowOp(bufferOpType_t bOp, uint8_t row, uint32_t data);
+  /**
+   * do something with one buffer row only
+   */
+  void modify_buffer_row(modType_t mod, uint8_t row, uint32_t data);
 };
 
 #endif
