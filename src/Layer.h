@@ -9,21 +9,34 @@
 
 #include "Helper.h"
 
-#define HEIGHT 8
-
+#define MAX_H 8
+#define MAX_W 32
 class Layer
 {
 
 public:
+  uint8_t offset_top = 0;
+  uint8_t offset_right = 0;
+
+  uint8_t WIDTH;
+  uint8_t HEIGHT;
+
+  Layer(uint8_t width = MAX_W, uint8_t height = MAX_H, uint8_t top = 0, uint8_t right = 0);
+
   /**
    * move overflown bits to the other side on move
    */
   uint8_t WARPAROUND = 1;
 
   /**
+   * when applying this layer you may check if 0 bits should be forced
+   */
+  uint8_t TRANSPARENT = 1;
+
+  /**
    * buffer
    */
-  uint32_t buffer[HEIGHT];
+  uint32_t buffer[MAX_H];
 
   /**
    * clears the buffer
@@ -35,7 +48,7 @@ public:
    * sets data in buffer
    * Shorthand for: bufferOp(write data)
    */
-  void apply(uint32_t *data);
+  void apply(Layer *src);
 
   /**
    * shifts buffer 'amount' bits horizontaly
@@ -47,9 +60,8 @@ public:
   /**
    * loads a sprite with offsets into buffer
    */
-  void sprite(uint8_t *data, int offset_top = 0, int offset_right = 0);
+  void sprite(uint8_t *data, int top = 0, int right = 0);
 
-private:
   /**
    * do something with complete buffer
    */

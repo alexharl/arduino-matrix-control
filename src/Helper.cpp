@@ -10,6 +10,8 @@ void modify_bits(modType_t mod, uint32_t *value, uint32_t data)
 {
     if (mod & CLEAR)
         *value = 0;
+    if (mod & CUT)
+        *value &= ~data;
     if (mod & WRITE)
         *value |= data;
     if (mod & REVERSE)

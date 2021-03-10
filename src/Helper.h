@@ -18,9 +18,10 @@ uint32_t set_all_bytes(uint8_t value);
 enum modType_t
 {
     CLEAR = 1,
-    WRITE = 2,
-    OVERWRITE = 3,
-    REVERSE = 4
+    CUT = 2,
+    WRITE = 4,
+    OVERWRITE = 5,
+    REVERSE = 8
 };
 
 /**
